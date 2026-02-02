@@ -18,18 +18,15 @@ public class SaleService {
 
     @Transactional
     public Sale createSale(SaleRequest request) {
-        // Validate register (create if not exists)
         Register register = null;
         if (request.registerId != null) {
             register = Register.findById(request.registerId);
         }
         if (register == null) {
-            // create a new register if id missing or not found
             register = new Register(request.registerName != null ? request.registerName : "default");
             register.persist();
         }
 
-        // Validate book IDs
         List<Long> missing = new ArrayList<>();
         for (SaleItemRequest it : request.items) {
             if (Book.findById(it.bookId) == null) {
@@ -77,7 +74,7 @@ public class SaleService {
         BigDecimal grandTotal = BigDecimal.ZERO;
 
         for (Sale s : sales) {
-            BigDecimal saleValue = s.total.add(s.discount); // original total before discount
+            BigDecimal saleValue = s.total.add(s.discount);
             grandTotal = grandTotal.add(saleValue);
             for (SaleItem it : s.items) {
                 SoldBook sb = map.get(it.bookId);
@@ -96,7 +93,6 @@ public class SaleService {
         return new SalesReport(soldBooks, grandTotal.setScale(2, RoundingMode.HALF_UP));
     }
 
-    // DTO-like inner classes to keep files minimal
     public static class SaleRequest {
         public Long registerId;
         public String registerName;

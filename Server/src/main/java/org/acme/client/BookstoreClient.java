@@ -47,7 +47,6 @@ public class BookstoreClient {
     }
 
     private static String formatItems(String input) {
-        // Transform "1,2" -> "{ \"bookId\": 1, \"quantity\": 1 }, { \"bookId\": 2, \"quantity\": 1 }"
         String[] ids = input.split(",");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ids.length; i++) {
